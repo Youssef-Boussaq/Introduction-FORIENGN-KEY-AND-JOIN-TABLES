@@ -1,0 +1,230 @@
+1: create database school_1
+
+
+mysql> create database school_1;
+Query OK, 1 row affected (0.05 sec)
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| isgi               |
+| mysql              |
+| performance_schema |
+| sakila             |
+| school             |
+| school_1           |
+| sys                |
+| world              |
++--------------------+
+9 rows in set (0.03 sec)
+
+mysql> use school_1;
+Database changed
+mysql> show tables;
+Empty set (0.00 sec)
+
+2 : creat table sta for stagaire and insert values
+
+
+ CREATE TABLE sta(
+    -> code_st INT PRIMARY KEY,
+    -> name VARCHAR(20)
+    -> );
+Query OK, 0 rows affected (0.10 sec)
+
+mysql> show tables;
++--------------------+
+| Tables_in_school_1 |
++--------------------+
+| sta                |
++--------------------+
+
+mysql> desc sta;
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+| code_st | int         | NO   | PRI | NULL    |       |
+| name    | varchar(20) | NO   |     | NULL    |       |
++---------+-------------+------+-----+---------+-------+
+
+mysql>  insert into sta
+    ->  values(1,'kabbour'),
+    ->  (2,'simo'),
+    ->  (3,'abdo lkhni');
+Query OK, 3 rows affected (0.02 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+3: copy table stg_copy like sta 
+
+
+ create  table stg_copy like sta;
+Query OK, 0 rows affected (0.08 sec)
+
+mysql> show tables;
++--------------------+
+| Tables_in_school_1 |
++--------------------+
+| sta                |
+| stg_copy           |
++--------------------+
+2 rows in set (0.00 sec)
+
+mysql> desc sta;
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+| code_st | int         | NO   | PRI | NULL    |       |
+| name    | varchar(20) | NO   |     | NULL    |       |
++---------+-------------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+mysql> desc stg_copy
+    -> ;
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+| code_st | int         | NO   | PRI | NULL    |       |
+| name    | varchar(20) | NO   |     | NULL    |       |
++---------+-------------+------+-----+---------+-------+
+2 rows in set (0.01 sec)
+
+
+4: creat table groupe and alter table sta and  add column code group foreign key refrences table group
+> create table Groupe(
+    -> code_gr int primary key,
+    -> filier varchar(10) not null);
+Query OK, 0 rows affected (0.11 sec)
+
+mysql> show tables;
++--------------------+
+| Tables_in_school_1 |
++--------------------+
+| groupe             |
+| sta                |
+| stg_copy           |
++--------------------+
+3 rows in set (0.00 sec)
+
+mysql> desc Groupe
+    -> ;
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+| code_gr | int         | NO   | PRI | NULL    |       |
+| filier  | varchar(10) | NO   |     | NULL    |       |
++---------+-------------+------+-----+---------+-------+
+2 rows in set (0.01 sec)
+
+
+mysql> insert into Groupe
+    -> values(1,'dev'),
+    -> (2,'info'),
+    -> (3,'ges');
+Query OK, 3 rows affected (0.02 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> select * from groupe;
++---------+--------+
+| code_gr | filier |
++---------+--------+
+|       1 | dev    |
+|       2 | info   |
+|       3 | ges    |
++---------+--------+
+3 rows in set (0.00 sec)
+
+mysql> alter table sta
+    -> add column code_gr int;
+Query OK, 0 rows affected (0.06 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc sta;
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+| code_st | int         | NO   | PRI | NULL    |       |
+| name    | varchar(20) | NO   |     | NULL    |       |
+| code_gr | int         | YES  |     | NULL    |       |
++---------+-------------+------+-----+---------+-------+
+3 rows in set (0.01 sec)
+
+mysql> select * from sta;
++---------+------------+---------+
+| code_st | name       | code_gr |
++---------+------------+---------+
+|       1 | kabbour    |    NULL |
+|       2 | simo       |    NULL |
+|       3 | abdo lkhni |    NULL |
++---------+------------+---------+
+3 rows in set (0.00 sec)
+
+mysql> alter table sta
+    -> add foreign key (code_gr) references groupe (code_gr);
+Query OK, 3 rows affected (0.32 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> desc sta
+    -> ;
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+| code_st | int         | NO   | PRI | NULL    |       |
+| name    | varchar(20) | NO   |     | NULL    |       |
+| code_gr | int         | YES  | MUL | NULL    |       |
++---------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+
+mysql> update sta
+    -> set code_gr =1 where code_st = 3;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update sta
+    -> set code_gr =2 where code_st = 2;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update sta
+    -> set code_gr =3 where code_st = 3;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from sta;
++---------+------------+---------+
+| code_st | name       | code_gr |
++---------+------------+---------+
+|       1 | kabbour    |    NULL |
+|       2 | simo       |       2 |
+|       3 | abdo lkhni |       3 |
++---------+------------+---------+
+3 rows in set (0.00 sec)
+
+mysql> update sta
+    -> set code_gr =2 where code_st = 1;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from sta;
++---------+------------+---------+
+| code_st | name       | code_gr |
++---------+------------+---------+
+|       1 | kabbour    |       2 |
+|       2 | simo       |       2 |
+|       3 | abdo lkhni |       3 |
++---------+------------+---------+
+3 rows in set (0.00 sec)
+
+
+5:join table sta and group
+
+mysql> select * from sta join groupe where sta.code_gr = groupe.code_gr;
++---------+------------+---------+---------+--------+
+| code_st | name       | code_gr | code_gr | filier |
++---------+------------+---------+---------+--------+
+|       1 | kabbour    |       2 |       2 | info   |
+|       2 | simo       |       2 |       2 | info   |
+|       3 | abdo lkhni |       3 |       3 | ges    |
++---------+------------+---------+---------+--------+
